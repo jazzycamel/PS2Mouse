@@ -58,9 +58,9 @@ uint8_t PS2Mouse::read(void){
   
   for(int i=0; i<8; i++){
     while(digitalRead(_ps2clk)==HIGH);
-    if(digitalRead(_ps2data)==HIGH) data|=bit;
+    bit=digitalRead(_ps2data);
     while(digitalRead(_ps2clk)==LOW);
-    bit=bit<<1;
+    bitWrite(data,i,bit);
   }
   
   while(digitalRead(_ps2clk)==HIGH);
@@ -87,9 +87,11 @@ void PS2Mouse::getPosition(uint8_t &stat, int &x, int &y){
   stat=read();
   uint8_t _x=read();
   uint8_t _y=read();  
-  
-  x=twos(_x, stat&0x10==0x10);
-  y=twos(_y, stat&0x20==0x20);
+
+  bool negx=bitRead(stat,4);
+  bool negy=bitRead(stat,5);
+  x=twos(_x, negx);
+  y=twos(_y, negy);
 }
 
 void PS2Mouse::golo(int pin){
@@ -102,9 +104,10 @@ void PS2Mouse::gohi(int pin){
   digitalWrite(pin, HIGH);
 }
 
+const int m=0x100;
 int PS2Mouse::twos(uint8_t value, bool sign){
-  int v=(int)v, m=0x100;
-  if(sign) v|=m;
-  return -(v&m)+(v&~m);
+  int v=(int)value;
+  if(sign) v|=0xFF00;
+  return v;
 }
 

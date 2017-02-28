@@ -5,7 +5,7 @@
 
 class PS2Mouse {
   public:
-    PS2Mouse(int clk, int data);
+    PS2Mouse(int data, int clk);
     void write(uint8_t data);
     uint8_t read(void);
 
