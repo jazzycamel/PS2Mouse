@@ -1,7 +1,10 @@
 #include "PS2Mouse.h"
 
 PS2Mouse::PS2Mouse(int clk, int data){
-  
+  _ps2clk=clk;
+  _ps2data=data;
+  gohi(_ps2clk);
+  gohi(_ps2data);  
 }
 
 void PS2Mouse::write(uint8_t data){
@@ -85,8 +88,8 @@ void PS2Mouse::getPosition(uint8_t &stat, int &x, int &y){
   uint8_t _x=read();
   uint8_t _y=read();  
 
-  x=(int)_x*-(stat&0x10);
-  y=(int)_y*-(stat&0x20);
+  x=(int)_x*(stat&0x10?-1:1);
+  y=(int)_y*(stat&0x20?-1:1);
 }
 
 void PS2Mouse::golo(int pin){
