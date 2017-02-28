@@ -87,9 +87,9 @@ void PS2Mouse::getPosition(uint8_t &stat, int &x, int &y){
   stat=read();
   uint8_t _x=read();
   uint8_t _y=read();  
-
-  x=(int)_x*(stat&0x10?-1:1);
-  y=(int)_y*(stat&0x20?-1:1);
+  
+  x=twos(_x);
+  y=twos(_y);
 }
 
 void PS2Mouse::golo(int pin){
@@ -100,5 +100,10 @@ void PS2Mouse::golo(int pin){
 void PS2Mouse::gohi(int pin){
   pinMode(pin, INPUT);
   digitalWrite(pin, HIGH);
+}
+
+int PS2Mouse::twos(uint8_t value){
+  int v=(int)v, m=0x100;
+  return -(v&m)+(v&~m);
 }
 

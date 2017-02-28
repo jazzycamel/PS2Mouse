@@ -17,6 +17,7 @@ class PS2Mouse {
     int _ps2data;
     void golo(int pin);
     void gohi(int pin);
+    int twos(uint8_t value);
 };
 
 #endif // __PS_2_H__
